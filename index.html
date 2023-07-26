@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISM Calcurater</title>
+</head>
+
+<body>
+    <form action="" name="MatrixSize">
+        <input type="input" value="3" name="text">
+        <input type="button" value="次数を決定" onclick="displayMatrix()">
+    </form>
+
+    <table id="matrix" border="1">
+    </table>
+    
+    <input type="button" value="calculate" id="calcu" onclick="calculate()">
+
+    <pre class="mermaid">
+        graph TD
+        A --- B
+        B --> C
+        C --> E
+        B --> E
+    </pre>
+
+    <script src="array.js"></script>
+    <script src="calculate.js"></script>
+    <script src="create_matrix.js"></script>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    </script>
+    <script>
+        window.onload = () => {
+            displayMatrix();
+        }
+    </script>
+</body>
+
+</html>
