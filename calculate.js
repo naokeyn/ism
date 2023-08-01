@@ -67,22 +67,42 @@ let calculate = () => {
         matrixT = dotMatrix(matrixT, matrixB);
         m++;
         if (m > size) {
-            console.log("[Error] We cannot solve this!!!")
             break;
         }
     }
-    console.log(m);
 
     // 可達行列を連想配列に変換
     let dictMatrixT = {};
-    for (let i=0 ; i<size ; i++){
+    for (let i = 0; i < size; i++) {
         dictMatrixT[i] = matrixT[i];
     }
+    // 可達行列を表示
+    displayAnswer(dictMatrixT);
 
     // 先行集合の計算
-    
+    let groupList = new Array(0);
+    while (Object.keys(dictMatrixT).length > 2){
+        let level = 0;
+        let deletKeys = new Array(0);
+        for (let i of Object.keys(dictMatrixT)) {
+            let array = dictMatrixT[i];
+            let count = 0;
+            // 配列の1の個数をカウント
+            for (let j = 0; j < array.length; j++) {
+                if (array[j] === 1) {
+                    count++;
+                }
+            }
+            // 
+            if (count === 1) {
+                deletKeys.push(i);
+            }
+        }
+        
 
-    console.log(dictMatrixT);
+        level++;
+    }
 
-    return matrixB;
+    // 階層グラフの描画
+
 }
