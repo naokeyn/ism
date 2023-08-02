@@ -69,6 +69,25 @@ let create2DSquareArray = (size) => {
 }
 
 /**
+ * 指定した列を全て0にする
+ * @param {Array} matrix 二次元配列
+ * @param {*} column 列（整数）
+ * @returns 
+ */
+let deleteColumns = (matrix, column) => {
+    let size = matrix.length;
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            if (j == column) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    return matrix;
+}
+
+/**
  * 行列の転置を返す関数
  * @param {Array} matrix 二次元配列 
  * @returns {Array} 二次元配列
