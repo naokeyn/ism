@@ -55,7 +55,10 @@ let displayMatrix = () => {
     }
 }
 
-
+/**
+ * 可達行列をブラウザに表示する関数
+ * @param {Array} dictMatrix 辞書型の行列
+ */
 let displayAnswer = (dictMatrix) => {
     let ansArea = document.getElementById("ansArea");
     let size = Object.keys(dictMatrix).length;
@@ -133,9 +136,10 @@ let GetMatrix = (RowNames) => {
 let graphFormat = (dictMatrixT, levelList) => {
     let size = dictMatrixT.length;
 
-    let nodeLevel = new Array()
-    let edges = new Array()
+    let nodeLevel = new Array();
+    let allEdges = new Array();
     let nodes = {};
+    let edges = new Array();
 
     // レベルの最大値を取得
     let maxLevel = Math.max(...levelList);
@@ -164,7 +168,7 @@ let graphFormat = (dictMatrixT, levelList) => {
         for (const idx of level_i) {
             for (let k = 0; k < size; k++) {
                 if (dictMatrixT[idx][k] == 1 && idx != k) {
-                    edges.push([idx, k]);
+                    allEdges.push([k, idx]);
                 }
             }
         }
@@ -173,7 +177,7 @@ let graphFormat = (dictMatrixT, levelList) => {
 
     // ノードをグラフ化
     let level = 1;
-    for (const row of levelList) {
+    for (const row of nodeLevel) {
         let y = 50 * level;
         for (let i = 0; i < row.length; i++) {
             let x = CANVAS_WIDTH / (row.length + 1) * (i + 1);
@@ -182,8 +186,26 @@ let graphFormat = (dictMatrixT, levelList) => {
         level++;
     }
 
-    console.log(nodes)
-    // drawGraph(nodes, edges);
+    // エッジを整理
+    for (let i = 0; i < allEdges.length; i++) {
+        const edge = allEdges[i];
+
+        // レベルが2つ以上違うときは重複を調べる
+        if (levelList[edge[0]] - levelList[edge[1]] >= 2) {
+            let isDouble = false;
+            for (let j = i + 1; j < allEdges.length; j++) {
+                if (edge[0] == allEdges[j][0]) {
+
+                }
+            }
+        }
+        else {
+            edges.push(edge);
+        }
+    }
+
+    console.log(allEdges)
+    drawGraph(nodes, allEdges);
     // return { "nodes": nodes, "edges": edges }
 }
 
@@ -196,15 +218,9 @@ let drawGraph = (nodes, edges) => {
 
     let nodeWidth = 20;
     let nodeHeight = 20;
-    // let nodes = {
-    //     0: [50, 50],
-    //     1: [100, 50],
-    //     2: [150, 50],
-    //     3: [100, 100]
-    // }
-    // let edges = [
-    //     [0, 3], [1, 3], [2, 3]
-    // ]
+
+    // キャンバスのクリア
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // エッジの描画
     for (let edge of edges) {
@@ -227,7 +243,7 @@ let drawGraph = (nodes, edges) => {
         let nodeY = nodes[i][1] - nodeHeight / 2;
         ctx.clearRect(nodeX, nodeY, nodeWidth, nodeHeight);
         ctx.strokeRect(nodeX, nodeY, nodeWidth, nodeHeight);
-        ctx.fillText(i, nodes[i][0] - 1.5, nodes[i][1] + 1.5);
+        ctx.fillText(Number(i) + 1, nodes[i][0] - 1.5, nodes[i][1] + 1.5);
     }
 }
 
@@ -272,6 +288,7 @@ let calculate = () => {
     let level = 0;
     while (Object.keys(dictMatrixT).length > 1) {
         let deletKeys = new Array(0);
+        let ok = false;
         for (const i of Object.keys(dictMatrixT)) {
             let array = dictMatrixT[i];
             let count = 0;
@@ -284,6 +301,7 @@ let calculate = () => {
             if (count === 1) {
                 deletKeys.push(i);
                 levelList[i] = level;
+                ok = true;
             }
         }
         // 指定した行・列を削除
@@ -294,6 +312,7 @@ let calculate = () => {
             }
         }
         level++;
+        if (ok == false) break;
     }
     // 最上位のレベルを付与
     if (Object.keys(dictMatrixT).length > 0) {
@@ -304,8 +323,4 @@ let calculate = () => {
 
     // 階層グラフの描画
     let graphComponents = graphFormat(matrixT, levelList);
-    // let nodes = graphComponents["nodes"];
-    // let edges = graphComponents["edges"];
-
-
 }
